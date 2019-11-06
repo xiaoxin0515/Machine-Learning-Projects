@@ -1,0 +1,10 @@
+jupyter
+matplotlib
+notebook
+numpy
+protobuf
+tensorboard
+tensorboardX
+tensorflow
+torch
+torchvision

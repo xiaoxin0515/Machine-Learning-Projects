@@ -1,0 +1,49 @@
+---
+title: "Assignment6"
+output: word_document
+---
+```{r}
+library(MASS)
+data = read.table("/Users/xiaoxin/Desktop/19spring/aml/6/housing.data.txt")
+model = lm(V14~., data = data)
+summary(model)
+plot(model, id.n = 20)
+```
+```{r}
+index1 = which(abs(stdres(model))>3)
+index1
+index2 = which(cooks.distance(model)>0.0079)
+index2
+index = intersect(index1,index2)
+index
+```
+
+```{r}
+data_fit = data[-c(187,365,369,370,371,372,373,413,381),]
+model_fit = lm(V14~., data = data_fit)
+summary(model_fit)
+plot(model_fit, id.n = 10)
+```
+
+
+```{r}
+trans = boxcox(model_fit)
+lambda = trans$x[which(trans$y == max(trans$y))]
+print(lambda)
+model_trans = lm(V14^lambda~.,data = data_fit)
+summary(model_trans)
+plot(model_trans)
+```
+
+```{r}
+y_predict = predict(model_trans, newdata = data_fit[1:13])
+plot(data_fit$V14,y_predict, xlab = "true house price", ylab = "fitted house price",main = "fitted house price against true house price")
+```
+
+
+```{r pressure, echo=TRUE}
+std_residual = stdres(model_trans)
+plot((data_fit$V14)^lambda, std_residual, ylab = "standardized residuals", xlab = "fitted value", main = "Standardized residuals against fitted values")
+```
+
+
